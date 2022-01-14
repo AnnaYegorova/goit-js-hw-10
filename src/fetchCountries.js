@@ -4,4 +4,5 @@ function fetchCountries(name) {
     return responce.json();
   });
 }
+
 export { fetchCountries };

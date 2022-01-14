@@ -2,6 +2,7 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix';
 import { fetchCountries } from './fetchCountries';
+import { values, valuesIn } from 'lodash';
 
 const DEBOUNCE_DELAY = 300;
 const input = document.querySelector('#search-box');
@@ -16,12 +17,6 @@ function onInput(e) {
     .then(renderMarkUpCard)
     .catch(error => Notify.failure('Oops, there is no country with that name'));
 }
-// function fetchCountries(name) {
-//   const filterUrl = `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages `;
-//   return fetch(filterUrl).then(responce => {
-//     return responce.json();
-//   });
-// }
 
 function renderMarkUpCard(obj) {
   if (obj.length > 10) {
@@ -41,16 +36,25 @@ function renderMarkUpCard(obj) {
     div.insertAdjacentHTML('beforeend', markUpCards);
   } else if ((obj.length = 1)) {
     div.innerHTML = '';
-    console.log(obj);
+    // "languages":{
+    // "fra":"French",
+    // "gsw":"Swiss German",
+    // "ita":"Italian",
+    // "roh":"Romansh"}
+    // const values = Object.values(obj.languages)
     const markUpCard = obj
       .map(
         ({ flags, name, capital, population, languages }) => `<div class="card">
-        <ul class="card__list"><img src = "${flags.svg}" width = "30px"><span class = "card__name"> ${name.official}</span>
-  <li class="card__item">Capital: <span class = "card__span">${capital}</span></li>
-  <li class="card__item">Population: <span class = "card__span">${population}</span></li>
-  <li class="card__item">Languages: <span class = "card__span">${languages}</span></li>
-        </ul>
-  </div>`,
+          <ul class="card__list"><img src = "${
+            flags.svg
+          }" width = "30px"><span class = "card__name"> ${name.official}</span>
+    <li class="card__item">Capital: <span class = "card__span">${capital}</span></li>
+    <li class="card__item">Population: <span class = "card__span">${population}</span></li>
+    <li class="card__item">Languages: <span class = "card__span">${Object.values(
+      languages,
+    )}</span></li>
+          </ul>
+    </div>`,
       )
       .join('');
     div.insertAdjacentHTML('beforeend', markUpCard);

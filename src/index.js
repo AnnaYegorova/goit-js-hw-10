@@ -13,6 +13,9 @@ input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
   const inputValue = e.target.value.trim();
+  if (inputValue === '' || inputValue === ' ') {
+    return;
+  }
   fetchCountries(inputValue)
     .then(renderMarkUpCard)
     .catch(error => Notify.failure('Oops, there is no country with that name'));
@@ -22,7 +25,7 @@ function renderMarkUpCard(obj) {
   if (obj.length > 10) {
     div.innerHTML = '';
     Notify.info('Too many matches found. Please enter a more specific name.');
-  } else if (obj.length < 10 && obj.length >= 2) {
+  } else if (obj.length <= 10 && obj.length >= 2) {
     div.innerHTML = '';
     const markUpCards = obj
       .map(
@@ -36,12 +39,7 @@ function renderMarkUpCard(obj) {
     div.insertAdjacentHTML('beforeend', markUpCards);
   } else if ((obj.length = 1)) {
     div.innerHTML = '';
-    // "languages":{
-    // "fra":"French",
-    // "gsw":"Swiss German",
-    // "ita":"Italian",
-    // "roh":"Romansh"}
-    // const values = Object.values(obj.languages)
+
     const markUpCard = obj
       .map(
         ({ flags, name, capital, population, languages }) => `<div class="card">
